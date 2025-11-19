@@ -37,10 +37,13 @@
 
 /* Renk Sınıfları (Aynen korundu) */
 .proton-tier-platinum {
-  background-color: #b4c7dc;
-  color: #212529;
-  /* Tam siyah yerine koyu gri daha yumuşaktır */
-  text-shadow: none;
+    background-color: #b4c7d9;
+    color: #000;
+}
+
+.proton-tier-native {
+    background-color: #00c853; /* Green for Native */
+    color: #fff;
 }
 
 .proton-tier-gold {

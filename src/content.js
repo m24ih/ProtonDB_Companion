@@ -45,8 +45,13 @@ function fetchSteamId(title, callback) {
 function createBadge(tier, appId, isSmall = false) {
     const badge = document.createElement('div');
     badge.className = `proton-badge proton-tier-${tier}`;
-    badge.textContent = isSmall ? tier.substring(0, 1).toUpperCase() : `Proton: ${tier.toUpperCase()}`;
-    badge.title = `ProtonDB Tier: ${tier}`;
+    if (tier === 'native') {
+        badge.textContent = isSmall ? 'N' : 'Native';
+        badge.title = 'Native Linux Support';
+    } else {
+        badge.textContent = isSmall ? tier.substring(0, 1).toUpperCase() : `Proton: ${tier.toUpperCase()}`;
+        badge.title = `ProtonDB Tier: ${tier}`;
+    }
 
     if (isSmall) {
         badge.style.padding = '2px 4px';
@@ -80,13 +85,21 @@ function handleSteamAppPage() {
     const appId = appIdMatch ? appIdMatch[1] : null;
 
     if (appId) {
-        fetchProtonData(appId, (data) => {
-            if (!data.tier) return;
-            const titleElement = document.querySelector('.apphub_AppName');
-            if (titleElement && !titleElement.querySelector('.proton-badge')) {
-                titleElement.appendChild(createBadge(data.tier, appId));
+        const titleElement = document.querySelector('.apphub_AppName');
+        if (titleElement && !titleElement.querySelector('.proton-badge')) {
+            // Check for Native Support
+            const isNative = document.querySelector('.game_area_purchase_platform .platform_img.linux') ||
+                document.querySelector('.game_area_purchase_platform .platform_img.steamos');
+
+            if (isNative) {
+                titleElement.appendChild(createBadge('native', appId));
             }
-        });
+
+            fetchProtonData(appId, (data) => {
+                if (!data.tier) return;
+                titleElement.appendChild(createBadge(data.tier, appId));
+            });
+        }
     }
 }
 
@@ -114,8 +127,53 @@ function handleSteamHomepage() {
 }
 
 function injectSteamBadge(element, appId, isSmall) {
-    if (!appId || element.querySelector('.proton-badge') || element.getAttribute('data-proton-processed')) return;
-    element.setAttribute('data-proton-processed', 'true'); // Mark as processed
+    if (!appId) return;
+
+    // --- Native Detection ---
+    if (!element.hasAttribute('data-native-detected')) {
+        // Check for Native Support (Homepage/Search)
+        // Strategy 1: Descendants
+        let isNative = element.querySelector('.platform_img.linux') || element.querySelector('.platform_img.steamos');
+
+        // Strategy 2: Parent Container (for cases where data-ds-appid is on an inner element or sibling structure)
+        if (!isNative) {
+            const container = element.closest('.tab_item') ||
+                element.closest('.home_main_cap_item') ||
+                element.closest('.spotlight_content') ||
+                element.closest('.capsule');
+            if (container) {
+                isNative = container.querySelector('.platform_img.linux') || container.querySelector('.platform_img.steamos');
+            }
+        }
+
+        if (isNative) {
+            let target = element.querySelector('.discount_block');
+            if (!target) target = element.querySelector('.col_search_price');
+            if (!target) target = element;
+
+            // If target is not found inside element, try to find a suitable sibling or parent target
+            if (!target && element.parentElement) {
+                // Fallback for some layouts
+                target = element.parentElement.querySelector('.discount_block') || element;
+            }
+
+            if (target && !target.querySelector('.proton-tier-native')) {
+                const nativeBadge = createBadge('native', appId, isSmall);
+                if (target.classList.contains('discount_block')) {
+                    target.style.display = 'flex';
+                    target.style.alignItems = 'center';
+                    target.appendChild(nativeBadge);
+                } else {
+                    target.appendChild(nativeBadge);
+                }
+                element.setAttribute('data-native-detected', 'true');
+            }
+        }
+    }
+
+    // --- ProtonDB Data Fetching ---
+    if (element.hasAttribute('data-proton-processed')) return;
+    element.setAttribute('data-proton-processed', 'true'); // Mark as processed for API calls
 
     fetchProtonData(appId, (data) => {
         if (!data.tier) return;
@@ -124,7 +182,12 @@ function injectSteamBadge(element, appId, isSmall) {
         if (!target) target = element.querySelector('.col_search_price');
         if (!target) target = element;
 
-        if (target.querySelector('.proton-badge')) return;
+        // Fallback target logic same as above
+        if (!target && element.parentElement) {
+            target = element.parentElement.querySelector('.discount_block') || element;
+        }
+
+        if (target.querySelector('.proton-badge:not(.proton-tier-native)')) return; // Avoid duplicate Proton badges
 
         const badge = createBadge(data.tier, appId, isSmall);
 
