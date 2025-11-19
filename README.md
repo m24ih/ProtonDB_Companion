@@ -21,7 +21,7 @@ A browser extension that integrates **ProtonDB** compatibility tiers directly in
 ### Manual Installation (For Developers)
 1.  Clone this repository:
     ```bash
-    git clone [https://github.com/](https://github.com/)[m24ih]/ProtonDB_Companion.git
+    git clone https://github.com/m24ih/ProtonDB_Companion.git
     ```
 2.  Open your browser's extension manager:
     * **Chrome/Brave/Edge:** Go to `chrome://extensions`, enable **Developer mode**, click **Load unpacked**, and select the project folder.
