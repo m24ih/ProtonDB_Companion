@@ -1,0 +1,70 @@
+.proton-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  margin-left: 8px;
+  /* 10px bazen çok geniş kaçabilir, 8px idealdir */
+  border-radius: 4px;
+  font-weight: 700;
+  /* Bold yerine sayısal değer daha tutarlıdır */
+  font-size: 11px;
+  /* 12px bazen satırı patlatabilir, 11px daha güvenli */
+  color: #fff;
+  vertical-align: middle;
+  background-color: #333;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* Biraz daha derinlik */
+
+  /* Kritik Eklemeler */
+  font-family: "Motiva Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+  /* Metnin aşağı kaymasını engeller */
+  transition: transform 0.1s ease, filter 0.1s ease;
+  /* Animasyon */
+  user-select: none;
+  /* Metnin seçilmesini engeller */
+  z-index: 10;
+  /* Diğer elementlerin altında kalmaması için */
+}
+
+/* Hover Efekti: Kullanıcıya tıklanabilir olduğunu hissettir */
+.proton-badge:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Renk Sınıfları (Aynen korundu) */
+.proton-tier-platinum {
+  background-color: #b4c7dc;
+  color: #212529;
+  /* Tam siyah yerine koyu gri daha yumuşaktır */
+  text-shadow: none;
+}
+
+.proton-tier-gold {
+  background-color: #cfb53b;
+  color: #212529;
+  text-shadow: none;
+}
+
+.proton-tier-silver {
+  background-color: #a6a6a6;
+  color: #212529;
+  text-shadow: none;
+}
+
+.proton-tier-bronze {
+  background-color: #cd7f32;
+  color: #212529;
+  text-shadow: none;
+}
+
+.proton-tier-borked {
+  background-color: #d9534f;
+}
+
+.proton-tier-native {
+  background-color: #5cb85c;
+}

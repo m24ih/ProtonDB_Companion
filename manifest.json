@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "ProtonDB Companion",
+    "version": "1.0",
+    "description": "Displays ProtonDB compatibility tiers on Steam store pages.",
+    "permissions": [],
+    "host_permissions": [
+        "https://www.protondb.com/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://store.steampowered.com/*",
+                "*://store.epicgames.com/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "css": [
+                "styles.css"
+            ]
+        }
+    ]
+}
