@@ -4,6 +4,11 @@
 
 A browser extension that integrates **ProtonDB** compatibility tiers directly into **Steam** and **Epic Games Store** pages. Perfect for Linux and Steam Deck users!
 
+![[screenshots/SteamHomePage.png]]
+![[screenshots/SteamGamePage1.png]]
+![[screenshots/SteamGamePage2.png]]
+![[screenshots/EpicGamePage1.png]]
+![[screenshots/EpicGamePage2.png]]
 
 ## Features ✨
 
